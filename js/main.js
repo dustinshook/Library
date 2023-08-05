@@ -9,6 +9,17 @@ class Book {
         this.read = read;
     }
 
+    get title() {
+        return this._title;
+    }
+
+    set title(title) {
+        if (typeof title !== 'string') {
+            throw new Error('Title must be a string');
+        }
+        this._title = title;
+    }
+
     info() {
         return `${this.title} by ${this.author}, ${this.pages} pages, ${this.read ? 'read' : 'not read yet'}`;
     }
@@ -33,13 +44,32 @@ class Book {
         read.classList.add('read');
         read.textContent = this.read ? 'read' : 'not read yet';
 
+        const footer = document.createElement('div');
+        footer.classList.add('footer');
+
+        footer.innerHTML = `
+            <div class="btn" id="edit-book"><i class="fa-regular fa-pen-to-square"></i></div>
+            <div class="btn" id="remove-book"><i class="fa-regular fa-trash-can"></i></div>
+            `;
+
         card.appendChild(title);
         card.appendChild(author);
         card.appendChild(pages);
         card.appendChild(read);
+        card.appendChild(footer);
 
-        return card;
+        footer.addEventListener('click', (e) => {
+            if (e.target.closest('#remove-book')) {
+                card.remove();
+                myLibrary.splice(myLibrary.indexOf(this), 1);
+            } 
+        });
+
+        this.card = card;
+
+        return this.card;
     }
+
 }
 
 const addBookToLibrary = (book) => {
@@ -50,6 +80,7 @@ const addBookToLibrary = (book) => {
 /* dom loaded */
 document.addEventListener('DOMContentLoaded', () => {
     const main = document.getElementById('main');
+    const addBook = document.getElementById('add-book');
 
     myLibrary.push(new Book('The Hobbit', 'J.R.R. Tolkien', 295, true));
     myLibrary.push(new Book('The Fellowship of the Ring', 'J.R.R. Tolkien', 423, true));
@@ -59,7 +90,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     myLibrary.forEach(book => {
         main.appendChild(book.renderCard());
+    });
 
-        //console.log(book.renderCard());
+    addBook.addEventListener('click', () => {
+        const title = prompt('Title');
+        const author = prompt('Author');
+        const pages = prompt('Pages');
+        const read = confirm('Read?');
+
+        const book = new Book(title, author, pages, read);
+        myLibrary.push(book);
+        main.appendChild(book.renderCard());
     });
 });
