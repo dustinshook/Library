@@ -2,26 +2,12 @@
 const myLibrary = [];
 
 class Book {
-    constructor(title, author, pages, read = false) {
+    constructor(title, author, pages, genre, read = false) {
         this.title = title;
         this.author = author;
         this.pages = pages;
+        this.genre = genre;
         this.read = read;
-    }
-
-    get title() {
-        return this._title;
-    }
-
-    set title(title) {
-        if (typeof title !== 'string') {
-            throw new Error('Title must be a string');
-        }
-        this._title = title;
-    }
-
-    info() {
-        return `${this.title} by ${this.author}, ${this.pages} pages, ${this.read ? 'read' : 'not read yet'}`;
     }
 
     renderCard() {
@@ -29,7 +15,7 @@ class Book {
         card.classList.add('card');
 
         card.innerHTML = `
-            <div class="header">
+            <div class="header truncate">
                 <span class="title">${this.title}</span>
             </div>
             <div class="body">
@@ -41,10 +27,18 @@ class Book {
                     <span class="label">Pages:</span>
                     <span class="pages">${this.pages}</span>
                 </div>
+                <div class="info-group">
+                    <span class="label">Genre:</span>
+                    <span class="genre">${this.genre}</span>
+                </div>
+                <div class="info-group">
+                    <span class="label">Status:</span>
+                    <span class="status">${this.read ? 'Read' : 'Not Read'}</span>
+                </div>
             </div>
             <div class="footer">
-                <div class="btn" id="edit-book">
-                    <i class="fa-regular fa-pen-to-square"></i>
+                <div class="btn" id="read-book">
+                    <i class="fa-regular fa-bookmark ${this.read ? 'fas' : ''}"></i>
                 </div>
                 <div class="btn" id="remove-book">
                     <i class="fa-regular fa-trash-can"></i>
@@ -57,6 +51,12 @@ class Book {
                 card.remove();
                 myLibrary.splice(myLibrary.indexOf(this), 1);
             } 
+
+            if (e.target.closest('#read-book')) {
+                e.target.closest('i').classList.toggle('fas');
+                this.read = !this.read;
+                card.querySelector('.status').textContent = this.read ? 'Read' : 'Not Read';
+            }
         });
 
         this.card = card;
@@ -76,11 +76,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const main = document.getElementById('main');
     const addBook = document.getElementById('add-book');
 
-    myLibrary.push(new Book('The Hobbit', 'J.R.R. Tolkien', 295, true));
-    myLibrary.push(new Book('The Fellowship of the Ring', 'J.R.R. Tolkien', 423, true));
-    myLibrary.push(new Book('The Two Towers', 'J.R.R. Tolkien', 352, true));
-
-    console.log(myLibrary);
+    myLibrary.push(new Book('To Kill a Mockingbird', 'Harper Lee', 281, 'Southern Gothic', false));
+    myLibrary.push(new Book('A Brief History of Time', 'Stephen Hawking', 256, 'Popular Science', true));
+    myLibrary.push(new Book('The Name of the Wind', 'Patrick Rothfuss', 662, 'Fantasy', true));
 
     myLibrary.forEach(book => {
         main.appendChild(book.renderCard());
@@ -100,9 +98,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 <input type="text" name="title" id="title" placeholder="Title" required>
                 <input type="text" name="author" id="author" placeholder="Author" required>
                 <input type="number" name="pages" id="pages" placeholder="Pages" required>
+                <input type="text" name="genre" id="genre" placeholder="Genre" required>
             </div>
             <div class="footer">
-                <button type="submit" class="form-btn" id="submit-book">Add Book</button>
+                <button type="submit" class="form-btn" id="submit-book">Confirm</button>
             </div>
         `;
 
@@ -111,8 +110,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const title = e.target.querySelector('#title').value;
             const author = e.target.querySelector('#author').value;
             const pages = e.target.querySelector('#pages').value;
+            const genre = e.target.querySelector('#genre').value;
 
-            const book = new Book(title, author, pages);
+            const book = new Book(title, author, pages, genre);
             addBookToLibrary(book);
             myLibrary.forEach(book => {
                 main.appendChild(book.renderCard());
