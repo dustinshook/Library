@@ -72,6 +72,12 @@ li.nav-item:hover {
     flex-direction: column;
     gap: 1em;
     border-left: 1.5rem solid #333;
+    max-height: 300px;
+    max-width: 700px;
+}
+
+.card .header {
+    border-bottom: 1px solid #ddd;
 }
 
 .card .title {
@@ -79,10 +85,15 @@ li.nav-item:hover {
     font-weight: bold;
 }
 
+.card .body {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
 .card .footer {
     align-self: flex-end;
     display: flex;
-    justify-content: baseline;
     gap: 1em;
     margin-top: auto;
 }
@@ -90,7 +101,6 @@ li.nav-item:hover {
 .card .footer .btn {
     border: none;
     cursor: pointer;
-    
     transition: all 0.2s ease-in-out;
 }
 
@@ -125,4 +135,36 @@ li.nav-item:hover {
 
 .hidden {
     display: none;
+}
+
+input[type="text"],
+input[type="number"] {
+    padding: 0.5em;
+    border-radius: 0.5em;
+    border: 1px solid #ddd;
+    outline: none;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus {
+    border: 1px solid #333;
+}
+
+.form-btn {
+    background-color: #333;
+    color: #fff;
+    padding: 0.5em 1em;
+    border-radius: 0.5em;
+    border: none;
+    cursor: pointer;
+}
+
+.form-btn:hover {
+    scale: 1.1;
+    background-color: #444;
+}
+
+.form-btn:active {
+    scale: 1;
+    background-color: #333;
 }
