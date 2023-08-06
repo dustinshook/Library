@@ -153,7 +153,17 @@ li.nav-item:hover {
     border-radius: 0.5em;
     border: none;
     cursor: pointer;
-    
+    transition: all 0.2s ease-in-out;
+}
+
+#controls #add-book:hover {
+    scale: 1.1;
+    background-color: #444;
+}
+
+#controls #add-book:active {
+    scale: 1;
+    background-color: var(--primary-dark);
 }
 
 .hidden {
